@@ -11,7 +11,7 @@ locust_host : http://localhost:2330/
 
 elastic_host : http://localhost:9200/
 
-kibana_host : http://localhost:9200/
+kibana_host : http://localhost:5601
 
 
 
