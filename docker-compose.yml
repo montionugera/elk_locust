@@ -2,7 +2,19 @@ version: '3'
 services:
   web:
     image: jazzdd/alpine-flask:python3
-    ports:
-    - "5000:80"
     volumes:
       - ./app:/app
+    ports:
+    - "2350:80"
+  locust-master:
+    image: swernst/locusts:latest
+    volumes:
+      - ./locust_scripts:/scripts
+    ports:
+      - "2330:8089"
+
+  locust-worker:
+    image: swernst/locusts:latest
+    command: "--master-host=locust-master"
+    volumes:
+      - ./locust_scripts:/scripts

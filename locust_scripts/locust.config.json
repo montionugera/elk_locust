@@ -1,0 +1,4 @@
+{
+  "target": "http://10.0.12.56:2350",
+  "locusts": ["WebsiteUser"]
+}
