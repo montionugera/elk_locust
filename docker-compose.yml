@@ -6,15 +6,82 @@ services:
       - ./app:/app
     ports:
     - "2350:80"
+    networks: ['stack']
+
   locust-master:
     image: swernst/locusts:latest
     volumes:
       - ./locust_scripts:/scripts
     ports:
       - "2330:8089"
+    networks: ['stack']
 
   locust-worker:
     image: swernst/locusts:latest
     command: "--master-host=locust-master"
     volumes:
       - ./locust_scripts:/scripts
+    networks: ['stack']
+
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.1
+    ports:
+    - "9200:9200"
+    - "9300:9300"
+    volumes:
+      - ./data/esdata:/usr/share/elasticsearch/data
+    environment:
+      - xpack.security.enabled=false
+      - http.port=9200
+      - http.cors.enabled=true
+      - http.cors.allow-origin=http://127.0.0.1:3030
+      - http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
+      - http.cors.allow-credentials=true
+    networks: ['stack']
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.5.1
+    ports:
+      - "5601:5601"
+    volumes:
+      - ./kibana.yml:/usr/share/kibana/config/kibana.yml:ro
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+    networks: ['stack']
+    depends_on:
+      - elasticsearch
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:6.5.1
+    ports:
+      - "9600:9600"
+    volumes:
+#      - ./logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ./elk/pipelines/:/usr/share/logstash/pipelines/
+#      - .elk/patterns:/usr/share/logstash/patterns
+      - ./elk/pipelines.yml:/usr/share/logstash/config/pipelines.yml
+#      - ./logstash_grok.conf:/opt/logstash/logstash.conf
+#      - ./logstash_car.conf:/opt/logstash/logstash.conf
+#      - ./logstash_filebeat.conf:/opt/logstash/logstash.conf
+#      - ./logstash_pipe.conf:/opt/logstash/logstash.conf
+##      - ./carsmall.csv:/var/log/carsmall.csv
+#      - ./log:/var/log
+#    command: logstash -f /opt/logstash/logstash.conf
+#    command: logstash --path.config /usr/share/logstash/pipelines.yml
+    command: logstash
+    networks: ['stack']
+    depends_on:
+      - elasticsearch
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:6.5.1
+    volumes:
+      - ./elk/filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - ./app/logs:/var/log
+    depends_on:
+      - elasticsearch
+      - logstash
+    networks: ['stack']
+networks:
+  stack:

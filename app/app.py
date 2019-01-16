@@ -18,6 +18,11 @@ logger.addHandler(handler)
 
 @app.route('/')
 def work():
+    response = "work"
+    time_usage = random.uniform(0.00001, 0.00002)
+    time.sleep(time_usage)
+    log_msg = f"/|{response}|{time_usage}"
+    logger.info(log_msg)
     return "Work !"
 
 @app.route('/api1')
@@ -25,7 +30,7 @@ def ptt():
     time_usage = random.uniform(0.02, 0.05)
     time.sleep(time_usage)
     response = random.choice(Names)
-    log_msg = f"{response}|{time_usage}"
+    log_msg = f"/api1|{response}|{time_usage}"
     logger.info(log_msg)
     return response
 
@@ -34,7 +39,7 @@ def scg():
     time_usage = random.uniform(0.3, 0.7)
     time.sleep(time_usage)
     response = random.choice(Names)
-    log_msg = f"{response}|{time_usage}"
+    log_msg = f"api2|{response}|{time_usage}"
     logger.info(log_msg)
     return response
 
@@ -43,7 +48,7 @@ def api3():
     response = random.choice(Names)
     time_usage = random.uniform(0.201, 1.44)
     time.sleep(time_usage)
-    log_msg = f"{response}|{time_usage}"
+    log_msg = f"api3|{response}|{time_usage}"
     logger.info(log_msg)
     return response
 
