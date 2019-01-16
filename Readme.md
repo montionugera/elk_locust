@@ -1,6 +1,6 @@
 ## Run 
 
-docker-compose up
+docker-compose up --scale locust-worker=2
 
 
 ## App Destination
