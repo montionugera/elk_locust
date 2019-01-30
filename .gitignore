@@ -105,5 +105,8 @@ venv.bak/
 # mypy
 .mypy_cache/
 
+logs/api.log*
+logs/default.log.log*
+logs/listener.log*
 logs/*.log
 data

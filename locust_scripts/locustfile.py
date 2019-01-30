@@ -9,9 +9,10 @@ class WebsiteTasks(TaskSet):
         # self.client.post("/login/", {"username":credentials[0], "password":credentials[1]})
         pass
 
-    @task
+    @task(10)
     def index(self):
         self.client.get("/")
+        # self.client.get("/api1")
 
     @task
     def api1(self):
