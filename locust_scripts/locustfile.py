@@ -1,6 +1,9 @@
+import random
+
+import math
 from locust import HttpLocust, TaskSet, task
 
-
+Names = "Beatrix,Blaire,Callie,Cecily,Cleo,Coco,Cosette,Cybil,Daisy".split(",")
 # load user credentials from CSV
 #user_credentials = read_user_credentials_from_csv()
 class WebsiteTasks(TaskSet):
@@ -9,7 +12,7 @@ class WebsiteTasks(TaskSet):
         # self.client.post("/login/", {"username":credentials[0], "password":credentials[1]})
         pass
 
-    @task(10)
+    @task(1)
     def index(self):
         self.client.get("/")
         # self.client.get("/api1")
@@ -23,6 +26,19 @@ class WebsiteTasks(TaskSet):
     @task
     def api3(self):
         self.client.get("/api3")
+
+    @task
+    def json_log(self):
+        time_usage = math.fabs( random.normalvariate(4.01, 32.44))
+        lat, lng = random.uniform(-180, 180), random.uniform(-90, 90)
+        module = random.choice(Names)
+        random_json = {
+            "module":module,
+            "lat":lat,
+            "lng":lng,
+            "time_usage":time_usage,
+        }
+        self.client.post("/json_log",json = random_json)
 
 
 class WebsiteUser(HttpLocust):

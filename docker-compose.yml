@@ -1,27 +1,27 @@
 version: '3'
 services:
-  web:
-    image: jazzdd/alpine-flask:python3
-    volumes:
-      - ./app:/app
-    ports:
-    - "2350:80"
-    networks: ['stack']
-
-  locust-master:
-    image: swernst/locusts:latest
-    volumes:
-      - ./locust_scripts:/scripts
-    ports:
-      - "2330:8089"
-    networks: ['stack']
-
-  locust-worker:
-    image: swernst/locusts:latest
-    command: "--master-host=locust-master"
-    volumes:
-      - ./locust_scripts:/scripts
-    networks: ['stack']
+#  web:
+#    image: jazzdd/alpine-flask:python3
+#    volumes:
+#      - ./app:/app
+#    ports:
+#    - "2350:80"
+#    networks: ['stack']
+#
+#  locust-master:
+#    image: swernst/locusts:latest
+#    volumes:
+#      - ./locust_scripts:/scripts
+#    ports:
+#      - "2330:8089"
+#    networks: ['stack']
+#
+#  locust-worker:
+#    image: swernst/locusts:latest
+#    command: "--master-host=locust-master"
+#    volumes:
+#      - ./locust_scripts:/scripts
+#    networks: ['stack']
 
 
   elasticsearch:
@@ -29,8 +29,8 @@ services:
     ports:
     - "9200:9200"
     - "9300:9300"
-    volumes:
-      - ./data/esdata:/usr/share/elasticsearch/data
+#    volumes:
+#      - ./data/esdata:/usr/share/elasticsearch/data
     environment:
       - xpack.security.enabled=false
       - http.port=9200
@@ -39,19 +39,6 @@ services:
       - http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
       - http.cors.allow-credentials=true
     networks: ['stack']
-
-  kibana:
-    image: docker.elastic.co/kibana/kibana:6.5.1
-    ports:
-      - "5601:5601"
-    volumes:
-      - ./elk/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
-    environment:
-      ELASTICSEARCH_URL: http://elasticsearch:9200
-    networks: ['stack']
-    depends_on:
-      - elasticsearch
-
   logstash:
     image: docker.elastic.co/logstash/logstash:6.5.1
     ports:
@@ -66,7 +53,7 @@ services:
 #      - ./logstash_filebeat.conf:/opt/logstash/logstash.conf
 #      - ./logstash_pipe.conf:/opt/logstash/logstash.conf
 ##      - ./carsmall.csv:/var/log/carsmall.csv
-#      - ./log:/var/log
+      - ./ex/logs/:/var/logs/
 #    command: logstash -f /opt/logstash/logstash.conf
 #    command: logstash --path.config /usr/share/logstash/pipelines.yml
     command: logstash
@@ -74,14 +61,27 @@ services:
     depends_on:
       - elasticsearch
 
-  filebeat:
-    image: docker.elastic.co/beats/filebeat:6.5.1
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.5.1
+    ports:
+      - "5601:5601"
     volumes:
-      - ./elk/filebeat.yml:/usr/share/filebeat/filebeat.yml
-      - ./app/logs:/var/log
+      - ./elk/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+    networks: ['stack']
     depends_on:
       - elasticsearch
-      - logstash
-    networks: ['stack']
+
+#  filebeat:
+#    image: docker.elastic.co/beats/filebeat:6.5.1
+#    volumes:
+#      - ./elk/filebeat.yml:/usr/share/filebeat/filebeat.yml
+#      - ./app/logs:/var/log
+#    depends_on:
+#      - elasticsearch
+#      - logstash
+#    networks: ['stack']
 networks:
   stack:

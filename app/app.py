@@ -18,7 +18,7 @@ api_log_file_name = os.path.join(dir_path,'logs/api.log' )
 
 logger = logging.getLogger('api')
 logger.setLevel(logging.DEBUG)
-handler = RotatingFileHandler(api_log_file_name, maxBytes=2000000, backupCount=10)
+handler = RotatingFileHandler(api_log_file_name, maxBytes=5*1024*1024, backupCount=3)
 formatter = logging.Formatter('%(asctime)s|%(levelname)s|%(message)s', datefmt='%d/%b/%Y:%H:%M:%S%z')
 handler.setFormatter(formatter)
 logger.addHandler(handler)
@@ -26,10 +26,18 @@ logger.addHandler(handler)
 
 listener_log_file_name = os.path.join(dir_path,'logs/listener.log' )
 logger_listener = logging.getLogger('listener')
-handler = RotatingFileHandler(listener_log_file_name, maxBytes=2000000, backupCount=10)
+handler = RotatingFileHandler(listener_log_file_name, maxBytes=5*1024*1024, backupCount=3)
 handler.setFormatter(formatter)
 logger_listener.setLevel(logging.DEBUG)
 logger_listener.addHandler(handler)
+
+
+logger_json_file_name = os.path.join(dir_path,'logs/logger_json.log' )
+logger_json = logging.getLogger('logger_json')
+handler = RotatingFileHandler(logger_json_file_name, maxBytes=5*1024*1024, backupCount=3)
+handler.setFormatter(formatter)
+logger_json.setLevel(logging.DEBUG)
+logger_json.addHandler(handler)
 
 @app.route('/')
 def work():
@@ -70,6 +78,13 @@ def api3():
     logger.info(log_msg)
     return response
 
+
+@app.route('/json_log', methods=["POST"])
+def json_log():
+    json_str = json.dumps(request.get_json())
+    log_msg = f"{json_str}"
+    logger_json.info(log_msg)
+    return "ok"
 
 @app.route('/listen', methods=["POST"])
 def listen():

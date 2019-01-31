@@ -1,0 +1,1 @@
+## Where example logs stay

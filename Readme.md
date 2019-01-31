@@ -24,5 +24,14 @@ https://github.com/sernst/locusts
 
 ## Logstash / GROK
 
+#### Doc
+https://www.elastic.co/guide/en/logstash/current/input-plugins.html
+https://www.elastic.co/guide/en/logstash/current/filter-plugins.html
+
+tutorial
+
+https://logz.io/blog/logstash-grok/
+
 tester
+
 https://grokdebug.herokuapp.com/
