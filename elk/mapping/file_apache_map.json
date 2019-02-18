@@ -1,0 +1,16 @@
+{
+  "template": "file-apache-log-*",
+  "settings": {
+    "index.refresh_interval": "5s"
+  },
+  "mappings": {
+    "_default_": {
+      "properties": {
+        "@timestamp": {
+          "type": "date"
+        },
+        "location" : { "type" : "geo_point" }
+      }
+    }
+  }
+}

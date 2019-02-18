@@ -65,7 +65,7 @@
 filebeat.prospectors:
 - input_type: log
   paths:
-    - /var/log/api.log
+    - /var/log/logger_json.log
   #optional
   fields:  {log_group: api}
 
