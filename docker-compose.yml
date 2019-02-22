@@ -1,27 +1,27 @@
 version: '3'
 services:
-#  web:
-#    image: jazzdd/alpine-flask:python3
-#    volumes:
-#      - ./app:/app
-#    ports:
-#    - "2350:80"
-#    networks: ['stack']
-#
-#  locust-master:
-#    image: swernst/locusts:latest
-#    volumes:
-#      - ./locust_scripts:/scripts
-#    ports:
-#      - "2330:8089"
-#    networks: ['stack']
-#
-#  locust-worker:
-#    image: swernst/locusts:latest
-#    command: "--master-host=locust-master"
-#    volumes:
-#      - ./locust_scripts:/scripts
-#    networks: ['stack']
+  web:
+    image: jazzdd/alpine-flask:python3
+    volumes:
+      - ./app:/app
+    ports:
+    - "2350:80"
+    networks: ['stack']
+
+  locust-master:
+    image: swernst/locusts:latest
+    volumes:
+      - ./locust_scripts:/scripts
+    ports:
+      - "2330:8089"
+    networks: ['stack']
+
+  locust-worker:
+    image: swernst/locusts:latest
+    command: "--master-host=locust-master"
+    volumes:
+      - ./locust_scripts:/scripts
+    networks: ['stack']
 
 
   elasticsearch:
@@ -51,6 +51,7 @@ services:
       - ./elk/templates/:/usr/share/logstash/templates/
 #      - .elk/patterns:/usr/share/logstash/patterns
       - ./elk/pipelines.yml:/usr/share/logstash/config/pipelines.yml
+      - ./elk/mapping/:/usr/share/logstash/mapping/
 #      - ./logstash_grok.conf:/opt/logstash/logstash.conf
 #      - ./logstash_car.conf:/opt/logstash/logstash.conf
 #      - ./logstash_filebeat.conf:/opt/logstash/logstash.conf
@@ -77,14 +78,14 @@ services:
     depends_on:
       - elasticsearch
 
-#  filebeat:
-#    image: docker.elastic.co/beats/filebeat:6.5.1
-#    volumes:
-#      - ./elk/filebeat.yml:/usr/share/filebeat/filebeat.yml
-#      - ./app/logs:/var/log
-#    depends_on:
-#      - elasticsearch
-#      - logstash
-#    networks: ['stack']
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:6.5.1
+    volumes:
+      - ./elk/filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - ./app/logs:/var/log
+    depends_on:
+      - elasticsearch
+      - logstash
+    networks: ['stack']
 networks:
   stack:

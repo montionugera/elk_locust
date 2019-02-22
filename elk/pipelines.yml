@@ -3,8 +3,10 @@
 #- pipeline.id: elk_beat
 #  path.config: "/usr/share/logstash/pipelines/beat.conf"
 # file_apache
-- pipeline.id: file_apache
-  path.config: "/usr/share/logstash/pipelines/file_apache.conf"
+#- pipeline.id: file_apache
+#  path.config: "/usr/share/logstash/pipelines/file_apache.conf"
+- pipeline.id: beat_json
+  path.config: "/usr/share/logstash/pipelines/beat_json.conf"
 # beat_json_read
 #  path.config: "/usr/share/logstash/pipelines/beat_json.conf"
 

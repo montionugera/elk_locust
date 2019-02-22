@@ -1,0 +1,22 @@
+{
+  "template": "web-api-json-*",
+  "settings": {
+    "index.refresh_interval": "5s"
+  },
+  "mappings": {
+    "_default_": {
+      "properties": {
+        "@timestamp": {
+          "type": "date"
+        },
+        "geoip"  : {
+          "type" : "object",
+          "dynamic": true,
+          "properties" : {
+            "location" : { "type" : "geo_point" }
+          }
+        }
+      }
+    }
+  }
+}
