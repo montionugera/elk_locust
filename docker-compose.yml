@@ -39,6 +39,8 @@ services:
       - http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
       - http.cors.allow-credentials=true
     networks: ['stack']
+
+    
   logstash:
     image: docker.elastic.co/logstash/logstash:6.5.1
     ports:
@@ -46,13 +48,14 @@ services:
     volumes:
 #      - ./logstash.yml:/usr/share/logstash/config/logstash.yml
       - ./elk/pipelines/:/usr/share/logstash/pipelines/
+      - ./elk/templates/:/usr/share/logstash/templates/
 #      - .elk/patterns:/usr/share/logstash/patterns
       - ./elk/pipelines.yml:/usr/share/logstash/config/pipelines.yml
 #      - ./logstash_grok.conf:/opt/logstash/logstash.conf
 #      - ./logstash_car.conf:/opt/logstash/logstash.conf
 #      - ./logstash_filebeat.conf:/opt/logstash/logstash.conf
 #      - ./logstash_pipe.conf:/opt/logstash/logstash.conf
-##      - ./carsmall.csv:/var/log/carsmall.csv
+#      - ./carsmall.csv:/var/log/carsmall.csv
       - ./ex/logs/:/var/logs/
 #    command: logstash -f /opt/logstash/logstash.conf
 #    command: logstash --path.config /usr/share/logstash/pipelines.yml
